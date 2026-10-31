@@ -116,15 +116,15 @@
             '<span class="editable-text">' + (phone ? escapeHtml(phone) : '-') + '</span>' +
             '<i class="fa fa-pen editable-hint"></i>' +
             '</td>' +
-            '<td style="text-align: center;">' +
-            '<div class="gb-flex gb-flex-col gb-space-y-2">' +
-            '<a href="' + calc.waLink + '" target="_blank" class="btn wa btn-sm1 mb-1 btn-opsi"><i class="fa fa-brands fa-whatsapp"></i> Kirim</a>\n' +
-            '<a href="http://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(calc.copyLink) + '&quote=' + encodeURIComponent(calc.copyLink) + '" target="_blank" class="btn fb btn-sm1 mb-1 btn-opsi"><i class="fa fa-brands fa-facebook"></i> Kirim</a>\n' +
-            '<a href="' + escapeHtml(calc.copyLink) + '" target="_blank" class="btn visit btn-sm1 mb-1 btn-opsi"><i class="fa-solid fa-arrow-up-right-from-square"></i> Visit</a>\n' +
-            '<button data-action="copy" data-clipboard-text="' + escapeHtml(calc.copyLink) + '" class="btn link btn-sm1 mb-1 gb-btn-copy btn-opsi"><i class="fa-regular fa-copy"></i> Link</button>\n' +
-            '<button data-action="copy" data-clipboard-text="' + escapeHtml(calc.messageText) + '" class="btn textcopy btn-sm1 mb-1 gb-btn-copy btn-opsi"><i class="fa-regular fa-copy"></i> Text</button>\n' +
-            '<button data-action="edit-row" type="button" class="btn edit btn-sm1 mb-1 btn-opsi"><i class="fa fa-pencil"></i> Edit</button>\n' +
-            '<button data-action="delete" type="button" class="btn hapus btn-sm1 mb-1 btn-opsi"><i class="fa fa-trash-can"></i> Hapus</button>\n' +
+            '<td style="text-align: center; vertical-align: middle;">' +
+            '<div class="col-opsi-container">' +
+            '<a href="' + calc.waLink + '" target="_blank" class="btn wa btn-opsi"><i class="fa fa-brands fa-whatsapp"></i> Kirim</a>' +
+            '<a href="http://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(calc.copyLink) + '&quote=' + encodeURIComponent(calc.copyLink) + '" target="_blank" class="btn fb btn-opsi"><i class="fa fa-brands fa-facebook"></i> Kirim</a>' +
+            '<a href="' + escapeHtml(calc.copyLink) + '" target="_blank" class="btn visit btn-opsi"><i class="fa-solid fa-arrow-up-right-from-square"></i> Visit</a>' +
+            '<button data-action="copy" data-clipboard-text="' + escapeHtml(calc.copyLink) + '" class="btn link gb-btn-copy btn-opsi"><i class="fa-regular fa-copy"></i> Link</button>' +
+            '<button data-action="copy" data-clipboard-text="' + escapeHtml(calc.messageText) + '" class="btn textcopy gb-btn-copy btn-opsi"><i class="fa-regular fa-copy"></i> Text</button>' +
+            '<button data-action="edit-row" type="button" class="btn edit btn-opsi"><i class="fa fa-pencil"></i> Edit</button>' +
+            '<button data-action="delete" type="button" class="btn hapus btn-opsi"><i class="fa fa-trash-can"></i> Hapus</button>' +
             '</div>' +
             '</td>' +
             '</tr>';
@@ -160,7 +160,11 @@
             var $tds = $tr.find('td');
             var $tdName = $tds.eq(1);
             var $tdPhone = $tds.eq(2);
-            var $opsiDiv = $tds.eq(3).find('.gb-flex');
+            var $opsiDiv = $tds.eq(3).find('.col-opsi-container, .gb-flex');
+            if ($opsiDiv.length) {
+                $opsiDiv.addClass('col-opsi-container').removeClass('gb-flex gb-flex-col gb-space-y-2');
+                $opsiDiv.find('.btn-opsi').removeClass('btn-sm1 mb-1');
+            }
 
             if (!$tdName.hasClass('inline-editable-cell')) {
                 $tdName.addClass('inline-editable-cell col-nama').attr('data-field', 'name').attr('title', 'Klik untuk edit nama');
@@ -187,7 +191,7 @@
 
             var $visitBtn = $opsiDiv.find('a.btn.visit');
             if (!$visitBtn.length) {
-                $visitBtn = $('<a href="' + (liveCopyLink ? escapeHtml(liveCopyLink) : '#') + '" target="_blank" class="btn visit btn-sm1 mb-1 btn-opsi"><i class="fa-solid fa-arrow-up-right-from-square"></i> Visit</a>\n');
+                $visitBtn = $('<a href="' + (liveCopyLink ? escapeHtml(liveCopyLink) : '#') + '" target="_blank" class="btn visit btn-opsi"><i class="fa-solid fa-arrow-up-right-from-square"></i> Visit</a>');
                 var $linkBtn = $opsiDiv.find('button.btn.link');
                 if ($linkBtn.length) {
                     $linkBtn.before($visitBtn);
@@ -199,7 +203,7 @@
             }
 
             if ($opsiDiv.length && !$opsiDiv.find('button[data-action="edit-row"]').length) {
-                var $editBtn = $('<button data-action="edit-row" type="button" class="btn edit btn-sm1 mb-1 btn-opsi"><i class="fa fa-pencil"></i> Edit</button>');
+                var $editBtn = $('<button data-action="edit-row" type="button" class="btn edit btn-opsi"><i class="fa fa-pencil"></i> Edit</button>');
                 $opsiDiv.find('button[data-action="delete"]').before($editBtn);
             }
         });
