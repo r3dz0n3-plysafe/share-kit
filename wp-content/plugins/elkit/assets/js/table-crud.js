@@ -178,16 +178,24 @@
                     .append($('<i class="fa fa-pen editable-hint"></i>'));
             }
 
-            if ($opsiDiv.length && !$opsiDiv.find('a.btn.visit').length) {
-                var itemData = (window.contacts && window.contacts[i]) ? window.contacts[i] : null;
-                var copyUrl = (itemData && itemData.copyLink) ? itemData.copyLink : '#';
-                var $visitBtn = $('<a href="' + escapeHtml(copyUrl) + '" target="_blank" class="btn visit btn-sm1 mb-1 btn-opsi"><i class="fa-solid fa-arrow-up-right-from-square"></i> Visit</a>\n');
+            // Hitung URL langsung dari nama tamu baris ini agar selalu akurat saat refresh
+            var cleanGuestName = $.trim($tdName.find('.editable-text').text() || $tdName.clone().children().remove().end().text());
+            var cleanGuestPhone = $.trim($tdPhone.find('.editable-text').text() || $tdPhone.text());
+            if (cleanGuestPhone === '-') cleanGuestPhone = '';
+            var calculated = (cleanGuestName) ? generateRowUrls(cleanGuestName, cleanGuestPhone) : null;
+            var liveCopyLink = calculated ? calculated.copyLink : '';
+
+            var $visitBtn = $opsiDiv.find('a.btn.visit');
+            if (!$visitBtn.length) {
+                $visitBtn = $('<a href="' + (liveCopyLink ? escapeHtml(liveCopyLink) : '#') + '" target="_blank" class="btn visit btn-sm1 mb-1 btn-opsi"><i class="fa-solid fa-arrow-up-right-from-square"></i> Visit</a>\n');
                 var $linkBtn = $opsiDiv.find('button.btn.link');
                 if ($linkBtn.length) {
                     $linkBtn.before($visitBtn);
                 } else {
                     $opsiDiv.prepend($visitBtn);
                 }
+            } else if (liveCopyLink && ($visitBtn.attr('href') === '#' || !$visitBtn.attr('href'))) {
+                $visitBtn.attr('href', liveCopyLink);
             }
 
             if ($opsiDiv.length && !$opsiDiv.find('button[data-action="edit-row"]').length) {
@@ -371,15 +379,35 @@
         }).observe(tbody, { childList: true });
     }
 
-    // Pastikan clipboard copy tetap jalan untuk baris baru
-    if (typeof ClipboardJS !== 'undefined') {
-        new ClipboardJS('.gb-btn-copy').on('success', function (n) {
-            var r = $('.gb-notify');
-            r.show();
-            setTimeout(function () { r.hide(); }, 1000);
-            n.clearSelection();
-        });
-    }
+    // Fallback: jika tombol visit diklik tapi href masih '#' atau kosong, hitung saat itu juga
+    $(document).on('click', 'tbody[data-content="body--contact"] a.btn.visit', function (e) {
+        var $btn = $(this);
+        var currentHref = $btn.attr('href');
+        if (!currentHref || currentHref === '#') {
+            var $tr = $btn.closest('tr');
+            var $tdName = $tr.find('td.col-nama');
+            var $tdPhone = $tr.find('td.col-phone');
+            var gName = $.trim($tdName.find('.editable-text').text() || $tdName.clone().children().remove().end().text());
+            var gPhone = $.trim($tdPhone.find('.editable-text').text() || $tdPhone.text());
+            if (gPhone === '-') gPhone = '';
+            if (gName) {
+                var calc = generateRowUrls(gName, gPhone);
+                if (calc && calc.copyLink) {
+                    $btn.attr('href', calc.copyLink);
+                    window.open(calc.copyLink, '_blank');
+                    e.preventDefault();
+                }
+            }
+        }
+    });
+
+    // Jalankan enhanceExistingRows saat dokumen selesai dimuat
+    $(function () {
+        enhanceExistingRows();
+        setTimeout(enhanceExistingRows, 300);
+        setTimeout(enhanceExistingRows, 1000);
+    });
 
 })(jQuery);
+
 
