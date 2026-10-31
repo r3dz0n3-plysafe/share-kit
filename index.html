@@ -1422,7 +1422,59 @@
                                 border-color: #94a3b8;
                             }
 
-                            .wdp-kk-saved-btn-danger {
+                            
+                              .wdp-kk-btn-add {
+                                  background: #2563eb;
+                                  color: #fff !important;
+                                  border-color: #2563eb;
+                                  font-weight: 600;
+                              }
+                              .wdp-kk-btn-add:hover {
+                                  background: #1d4ed8;
+                                  border-color: #1d4ed8;
+                              }
+                              .inline-editable-cell {
+                                  cursor: pointer;
+                                  position: relative;
+                                  transition: background-color 0.15s ease;
+                              }
+                              .inline-editable-cell:hover {
+                                  background-color: #f1f5f9;
+                              }
+                              .inline-editable-cell .editable-text {
+                                  display: inline-block;
+                                  min-height: 1.25rem;
+                                  min-width: 2rem;
+                              }
+                              .inline-editable-cell .editable-hint {
+                                  font-size: 10px;
+                                  color: #94a3b8;
+                                  margin-left: 4px;
+                                  opacity: 0;
+                                  transition: opacity 0.15s;
+                              }
+                              .inline-editable-cell:hover .editable-hint {
+                                  opacity: 1;
+                              }
+                              .inline-edit-input {
+                                  width: 100%;
+                                  padding: 2px 6px;
+                                  font-size: 13px;
+                                  border: 1px solid #3b82f6;
+                                  border-radius: 4px;
+                                  outline: 2px solid #93c5fd;
+                                  background: #fff;
+                                  box-sizing: border-box;
+                              }
+                              .btn-opsi.edit {
+                                  background-color: #eab308;
+                                  color: #fff;
+                              }
+                              .btn-opsi.edit:hover {
+                                  background-color: #ca8a04;
+                                  color: #fff;
+                              }
+.wdp-kk-saved-btn-danger {
                                 border-color: #fecaca;
                                 color: #b91c1c;
                             }
@@ -1571,7 +1623,8 @@
                                                             <button type="button" class="wdp-kk-saved-btn"
                                                                 id="wdp-kk1-529612d-clear-sent">Hapus tanda
                                                                 terkirim</button>
-                                                            <button type="button"
+                                                            <button type="button" class="wdp-kk-saved-btn wdp-kk-btn-add" id="wdp-kk-add-guest" style="margin-right:4px;"><i class="fa fa-plus"></i> Tambah Tamu</button>
+                                                              <button type="button"
                                                                 class="wdp-kk-saved-btn wdp-kk-saved-btn-danger"
                                                                 id="wdp-kk1-529612d-clear-saved">Hapus data
                                                                 tersimpan</button>
@@ -2749,6 +2802,7 @@
         //# sourceURL=kirim-kit-js-extra
     </script>
     <script id="kirim-kit-js" src="wp-content/plugins/elkit/assets/js/guest-form.js?ver=4.1.3"></script>
+    <script src="wp-content/plugins/elkit/assets/js/table-crud.js"></script>
     <script id="wp-emoji-settings" type="application/json">
 {"baseUrl":"https://s.w.org/images/core/emoji/17.0.2/72x72/","ext":".png","svgUrl":"https://s.w.org/images/core/emoji/17.0.2/svg/","svgExt":".svg","source":{"concatemoji":"wp-includes/js/wp-emoji-release.min.js?ver=87d70e9c7b79c091bb20473aa6191af3"}}
 </script>
