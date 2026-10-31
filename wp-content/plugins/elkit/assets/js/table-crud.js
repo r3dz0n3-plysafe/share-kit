@@ -7,9 +7,14 @@
 
     function getBaseInvitationUrl() {
         var gid = window.guestInvitationData || {};
-        var base = gid.invitationLink || '';
-        var param = 'dear';
-        if (gid.to) {
+        var $select = $('#select_invitation_link');
+        var selectedVal = $select.length ? $select.val() : '';
+        var base = selectedVal || gid.invitationLink || '';
+        var param = 'to';
+        var selectedParam = $select.length ? $select.find(':selected').attr('data-param') : '';
+        if (selectedParam) {
+            param = selectedParam;
+        } else if (gid.to) {
             if (gid.to === 'settingDear') param = window.settingDear || 'dear';
             else param = gid.to;
         }
@@ -115,6 +120,7 @@
             '<div class="gb-flex gb-flex-col gb-space-y-2">' +
             '<a href="' + calc.waLink + '" target="_blank" class="btn wa btn-sm1 mb-1 btn-opsi"><i class="fa fa-brands fa-whatsapp"></i> Kirim</a>\n' +
             '<a href="http://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(calc.copyLink) + '&quote=' + encodeURIComponent(calc.copyLink) + '" target="_blank" class="btn fb btn-sm1 mb-1 btn-opsi"><i class="fa fa-brands fa-facebook"></i> Kirim</a>\n' +
+            '<a href="' + escapeHtml(calc.copyLink) + '" target="_blank" class="btn visit btn-sm1 mb-1 btn-opsi"><i class="fa-solid fa-arrow-up-right-from-square"></i> Visit</a>\n' +
             '<button data-action="copy" data-clipboard-text="' + escapeHtml(calc.copyLink) + '" class="btn link btn-sm1 mb-1 gb-btn-copy btn-opsi"><i class="fa-regular fa-copy"></i> Link</button>\n' +
             '<button data-action="copy" data-clipboard-text="' + escapeHtml(calc.messageText) + '" class="btn textcopy btn-sm1 mb-1 gb-btn-copy btn-opsi"><i class="fa-regular fa-copy"></i> Text</button>\n' +
             '<button data-action="edit-row" type="button" class="btn edit btn-sm1 mb-1 btn-opsi"><i class="fa fa-pencil"></i> Edit</button>\n' +
@@ -172,6 +178,18 @@
                     .append($('<i class="fa fa-pen editable-hint"></i>'));
             }
 
+            if ($opsiDiv.length && !$opsiDiv.find('a.btn.visit').length) {
+                var itemData = (window.contacts && window.contacts[i]) ? window.contacts[i] : null;
+                var copyUrl = (itemData && itemData.copyLink) ? itemData.copyLink : '#';
+                var $visitBtn = $('<a href="' + escapeHtml(copyUrl) + '" target="_blank" class="btn visit btn-sm1 mb-1 btn-opsi"><i class="fa-solid fa-arrow-up-right-from-square"></i> Visit</a>\n');
+                var $linkBtn = $opsiDiv.find('button.btn.link');
+                if ($linkBtn.length) {
+                    $linkBtn.before($visitBtn);
+                } else {
+                    $opsiDiv.prepend($visitBtn);
+                }
+            }
+
             if ($opsiDiv.length && !$opsiDiv.find('button[data-action="edit-row"]').length) {
                 var $editBtn = $('<button data-action="edit-row" type="button" class="btn edit btn-sm1 mb-1 btn-opsi"><i class="fa fa-pencil"></i> Edit</button>');
                 $opsiDiv.find('button[data-action="delete"]').before($editBtn);
@@ -217,6 +235,7 @@
 
             $tr.find('a.btn.wa').attr('href', updated.waLink);
             $tr.find('a.btn.fb').attr('href', 'http://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(updated.copyLink) + '&quote=' + encodeURIComponent(updated.copyLink));
+            $tr.find('a.btn.visit').attr('href', updated.copyLink);
             $tr.find('button.btn.link').attr('data-clipboard-text', updated.copyLink);
             $tr.find('button.btn.textcopy').attr('data-clipboard-text', updated.messageText);
 
@@ -314,6 +333,36 @@
         }
     });
 
+    // Event saat pilihan link undangan diubah: perbarui seluruh tautan di tabel
+    $(document).on('change', '#select_invitation_link', function () {
+        var chosenLink = $(this).val();
+        if (window.guestInvitationData) {
+            window.guestInvitationData.invitationLink = chosenLink;
+            window.guestInvitationData.to = $(this).find(':selected').attr('data-param') || 'to';
+        }
+        var $tbody = $('tbody[data-content="body--contact"]');
+        var contacts = window.contacts || [];
+        if (!contacts.length) return;
+
+        $tbody.find('tr').each(function () {
+            var $tr = $(this);
+            var idx = parseInt($tr.attr('data-index'), 10);
+            if (isNaN(idx)) idx = parseInt($.trim($tr.find('td:first').text()), 10) - 1;
+            if (contacts[idx] && !contacts[idx].skip) {
+                var updated = generateRowUrls(contacts[idx].name, contacts[idx].phoneNumber);
+                contacts[idx].waLink = updated.waLink;
+                contacts[idx].messageText = updated.messageText;
+                contacts[idx].copyLink = updated.copyLink;
+
+                $tr.find('a.btn.wa').attr('href', updated.waLink);
+                $tr.find('a.btn.fb').attr('href', 'http://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(updated.copyLink) + '&quote=' + encodeURIComponent(updated.copyLink));
+                $tr.find('a.btn.visit').attr('href', updated.copyLink);
+                $tr.find('button.btn.link').attr('data-clipboard-text', updated.copyLink);
+                $tr.find('button.btn.textcopy').attr('data-clipboard-text', updated.messageText);
+            }
+        });
+    });
+
     // Observe perubahan pada tbody untuk memperkaya baris saat di-generate ulang
     var tbody = document.querySelector('tbody[data-content="body--contact"]');
     if (tbody && window.MutationObserver) {
@@ -333,3 +382,4 @@
     }
 
 })(jQuery);
+

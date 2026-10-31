@@ -1474,6 +1474,16 @@
                                   background-color: #ca8a04;
                                   color: #fff;
                               }
+                              .btn-opsi.visit {
+                                  background-color: #0ea5e9;
+                                  color: #fff;
+                                  text-decoration: none !important;
+                              }
+                              .btn-opsi.visit:hover {
+                                  background-color: #0284c7;
+                                  color: #fff;
+                                  opacity: .85;
+                              }
 .wdp-kk-saved-btn-danger {
                                 border-color: #fecaca;
                                 color: #b91c1c;
@@ -1532,6 +1542,13 @@
                                         <div class="gb-w-full">
                                             <div class="card">
                                                 <div class="card-body gb-flex-col">
+                                                    <div class="form-group mb-3">
+                                                        <label for="select_invitation_link" style="font-weight: 600; margin-bottom: 6px; display: inline-block;">Pilih Link Undangan</label>
+                                                        <select class="form-control" id="select_invitation_link" style="border-radius: 8px; border: 1.5px solid #ced4da; padding: 8px 12px; font-size: 14px; background-color: #fdfdfd; cursor: pointer;">
+                                                            <option value="https://r3dz0n3-plysafe.github.io/icha-rehan/" data-param="to" selected>GitHub Pages (https://r3dz0n3-plysafe.github.io/icha-rehan/?to=...)</option>
+                                                            <option value="https://ourinvi.my.id/icha-rehan" data-param="to">OurInvi (https://ourinvi.my.id/icha-rehan?to=...)</option>
+                                                        </select>
+                                                    </div>
                                                     <div class="form-group">
                                                         <div class="row">
                                                             <div class="col">
@@ -1723,10 +1740,10 @@
 
                                 template: "Tanpa mengurangi rasa hormat, perkenankan kami mengundang Bapak\/Ibu\/Saudara\/i *[nama]* untuk menghadiri acara kami.\n\n*Berikut link undangan kami*, untuk info lengkap dari acara bisa kunjungi :\n\n[link-undangan]\n\nMerupakan suatu kebahagiaan bagi kami apabila Bapak\/Ibu\/Saudara\/i berkenan untuk hadir dan memberikan doa restu.\n\n*Mohon maaf perihal undangan hanya di bagikan melalui pesan ini.*\n\nDan agar selalu menjaga kesehatan bersama serta datang pada waktu yang telah ditentukan.\n\nTerima kasih banyak atas perhatiannya.",
 
-                                // FIX 3: Logika URL yang bersih dan aman (Tanpa 'goto' & Sanitasi XSS)
-                                invitationLink: "https:\/\/ourinvi.my.id\/icha-rehan",
+                                // Link default & pilihan tujuan undangan
+                                invitationLink: "https:\/\/r3dz0n3-plysafe.github.io\/icha-rehan\/",
 
-                                to: 'settingDear',
+                                to: 'to',
                                 hasPasskey: false,
                                 isAuthorized: true,
                                 // PIN Master tidak pernah dicetak di HTML: diisi hanya dari respons elkit_verify_kirimkit_gate.
@@ -2157,6 +2174,7 @@
                                 window.__elkitKk1ShareBound = true;
                                 $(document).on('click', 'tbody[data-content="body--contact"] tr a.btn.wa', function () { shared(this, 'wa'); });
                                 $(document).on('click', 'tbody[data-content="body--contact"] tr a.btn.fb', function () { shared(this, 'fb'); });
+                                $(document).on('click', 'tbody[data-content="body--contact"] tr a.btn.visit', function () { shared(this, 'link'); });
                                 $(document).on('click', 'tbody[data-content="body--contact"] tr button.btn.link', function () { shared(this, 'link'); });
                                 $(document).on('click', 'tbody[data-content="body--contact"] tr button.btn.textcopy', function () { shared(this, 'copy'); });
                                 // Bulk Send (SendKit) memberi tahu tiap pesan yang berhasil terkirim (event dari guest-form.js).
@@ -2801,8 +2819,8 @@
         var sendkit_ajax = { "ajax_url": "https://ourinvi.my.id/wp-admin/admin-ajax.php", "whatsapp_nonce": "6e21239844" };
         //# sourceURL=kirim-kit-js-extra
     </script>
-    <script id="kirim-kit-js" src="wp-content/plugins/elkit/assets/js/guest-form.js?ver=1793444777"></script>
-    <script src="wp-content/plugins/elkit/assets/js/table-crud.js?ver=1793444777"></script>
+    <script id="kirim-kit-js" src="wp-content/plugins/elkit/assets/js/guest-form.js?ver=1793444779"></script>
+    <script src="wp-content/plugins/elkit/assets/js/table-crud.js?ver=1793444779"></script>
     <script id="wp-emoji-settings" type="application/json">
 {"baseUrl":"https://s.w.org/images/core/emoji/17.0.2/72x72/","ext":".png","svgUrl":"https://s.w.org/images/core/emoji/17.0.2/svg/","svgExt":".svg","source":{"concatemoji":"wp-includes/js/wp-emoji-release.min.js?ver=87d70e9c7b79c091bb20473aa6191af3"}}
 </script>
