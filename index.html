@@ -1459,6 +1459,9 @@
                                   display: inline-block;
                                   min-height: 1.25rem;
                                   min-width: 2rem;
+                                  white-space: pre-wrap;
+                                  word-break: break-word;
+                                  vertical-align: middle;
                               }
                               .inline-editable-cell .editable-hint {
                                   font-size: 10px;
@@ -1470,15 +1473,23 @@
                               .inline-editable-cell:hover .editable-hint {
                                   opacity: 1;
                               }
-                              .inline-edit-input {
+                              .inline-edit-input,
+                              .inline-edit-textarea {
                                   width: 100%;
-                                  padding: 2px 6px;
+                                  padding: 4px 6px;
                                   font-size: 13px;
                                   border: 1px solid #3b82f6;
                                   border-radius: 4px;
                                   outline: 2px solid #93c5fd;
                                   background: #fff;
                                   box-sizing: border-box;
+                                  font-family: inherit;
+                              }
+                              .inline-edit-textarea {
+                                  resize: vertical;
+                                  min-height: 55px;
+                                  line-height: 1.4;
+                                  display: block;
                               }
                               .btn-opsi.edit {
                                   background-color: #eab308;
@@ -1667,7 +1678,7 @@
                                                                 <th>No</th>
                                                                 <th>Tamu</th>
                                                                 <th>No. Telepon</th>
-                                                                <th style="width:165px !important;">Opsi</th>
+                                                                <th style="width:200px !important;">Opsi</th>
                                                             </tr>
                                                         </thead>
                                                         <tbody id="body--contact" data-content="body--contact">
@@ -2833,8 +2844,8 @@
         var sendkit_ajax = { "ajax_url": "https://ourinvi.my.id/wp-admin/admin-ajax.php", "whatsapp_nonce": "6e21239844" };
         //# sourceURL=kirim-kit-js-extra
     </script>
-    <script id="kirim-kit-js" src="wp-content/plugins/elkit/assets/js/guest-form.js?ver=1793444780"></script>
-    <script src="wp-content/plugins/elkit/assets/js/table-crud.js?ver=1793444780"></script>
+    <script id="kirim-kit-js" src="wp-content/plugins/elkit/assets/js/guest-form.js?ver=1793444781"></script>
+    <script src="wp-content/plugins/elkit/assets/js/table-crud.js?ver=1793444781"></script>
     <script id="wp-emoji-settings" type="application/json">
 {"baseUrl":"https://s.w.org/images/core/emoji/17.0.2/72x72/","ext":".png","svgUrl":"https://s.w.org/images/core/emoji/17.0.2/svg/","svgExt":".svg","source":{"concatemoji":"wp-includes/js/wp-emoji-release.min.js?ver=87d70e9c7b79c091bb20473aa6191af3"}}
 </script>

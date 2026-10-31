@@ -206,7 +206,7 @@
     }
 
     function applyInlineEditCell($cell) {
-        if ($cell.find('input.inline-edit-input').length > 0) return;
+        if ($cell.find('input.inline-edit-input, textarea.inline-edit-textarea').length > 0) return;
         var $tr = $cell.closest('tr');
         var idx = parseInt($tr.attr('data-index'), 10);
         if (isNaN(idx)) idx = parseInt($.trim($tr.find('td:first').text()), 10) - 1;
@@ -219,10 +219,18 @@
         $textSpan.hide();
         if ($hint.length) $hint.hide();
 
-        var $input = $('<input type="text" class="inline-edit-input" />')
-            .val(currentVal)
-            .appendTo($cell)
-            .focus();
+        var $input;
+        if (field === 'name') {
+            $input = $('<textarea class="inline-edit-textarea" rows="2" placeholder="Nama Tamu (Shift+Enter / Enter untuk baris baru)"></textarea>')
+                .val(currentVal)
+                .appendTo($cell)
+                .focus();
+        } else {
+            $input = $('<input type="text" class="inline-edit-input" />')
+                .val(currentVal)
+                .appendTo($cell)
+                .focus();
+        }
 
         var committed = false;
         function commitChange() {
@@ -230,8 +238,13 @@
             committed = true;
             var newVal = $.trim($input.val());
             $input.remove();
-            if (field === 'name' && !newVal) {
-                newVal = currentVal || 'Tamu';
+
+            if (field === 'name') {
+                // Dukung literal \n atau /n bila user mengetiknya secara teks
+                newVal = newVal.replace(/\\n|\/n/g, '\n');
+                if (!newVal) {
+                    newVal = currentVal || 'Tamu';
+                }
             }
             window.contacts[idx][field] = newVal;
 
@@ -264,22 +277,36 @@
         });
 
         $input.on('keydown', function (e) {
-            if (e.which === 13) { // Enter
-                e.preventDefault();
-                $input.blur();
-            } else if (e.which === 27) { // Escape
-                e.preventDefault();
-                committed = true;
-                $input.remove();
-                $textSpan.show();
-                if ($hint.length) $hint.show();
+            if (field === 'name') {
+                // Untuk textarea nama: Ctrl+Enter selesai edit, Enter biasa membuat baris baru (atau Escape batal)
+                if (e.which === 13 && (e.ctrlKey || e.metaKey)) {
+                    e.preventDefault();
+                    $input.blur();
+                } else if (e.which === 27) { // Escape
+                    e.preventDefault();
+                    committed = true;
+                    $input.remove();
+                    $textSpan.show();
+                    if ($hint.length) $hint.show();
+                }
+            } else {
+                if (e.which === 13) { // Enter
+                    e.preventDefault();
+                    $input.blur();
+                } else if (e.which === 27) { // Escape
+                    e.preventDefault();
+                    committed = true;
+                    $input.remove();
+                    $textSpan.show();
+                    if ($hint.length) $hint.show();
+                }
             }
         });
     }
 
     // Event delegation: Klik sel Nama atau No Telepon
     $(document).on('click', 'tbody[data-content="body--contact"] td.inline-editable-cell', function (e) {
-        if ($(e.target).is('input')) return;
+        if ($(e.target).is('input, textarea')) return;
         applyInlineEditCell($(this));
     });
 
@@ -318,7 +345,7 @@
         if (!raw || !raw.trim()) return;
 
         var parts = raw.indexOf(';') !== -1 ? raw.split(';') : raw.split(' - ');
-        var name = (parts[0] || '').trim();
+        var name = (parts[0] || '').trim().replace(/\\n|\/n/g, '\n');
         var phone = (parts[1] || '').trim();
         if (!name) return;
 
